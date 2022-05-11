@@ -1,0 +1,8 @@
+declare 
+cursor cur_customer_guest is select * from customer_guest;
+
+begin
+for i in cur_customer_guest loop
+dbms_output.put_line(i.c_id||','||i.c_nm||','||i.c_phone||','||i.c_city);
+end loop;
+end;

@@ -1,0 +1,17 @@
+WAF BY PASSING THE AGE AND GENDER AT RUNTIME IF AGE<18 RETURN 0 OTHERWISE RETURN THE NO. OF EMPLOYEES WITH THAT OF AGE AND GENDER
+/
+create or replace function fn_cnt_age( p_age in number, p_gender in varchar2) return number as
+v_cnt int;
+
+begin
+if age<18 then
+return 0;
+else
+select count(emp_no) into v_cnt
+from emp
+where trunc(sysdate, 'dob')/365=p_age and
+gender=p_gender;
+return v_cnt;
+end if;
+end;
+/

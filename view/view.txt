@@ -1,0 +1,6 @@
+create view vw_cust_sales_cy as
+select cust_name,sum(amount) tot_rev_cy
+from customer_retail c, sales_retail s
+where c.cust_id=s.cust_id
+and to_char(sales_date, 'yy')=to_char(sysdate, 'yy')
+group by cust_name;
