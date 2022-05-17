@@ -1,0 +1,65 @@
+--code on dynamic sql
+create or replace procedure sp_dyn_1(p_table_name varchar2) as
+v_str varchar2(200);
+v_cnt int;
+type t is table of varchar2(30);
+v_tab t;
+begin
+v_str:='select column_name from user_tab_columns where table_name='||''''||upper(p_table_name)||'''';
+--dbms_output.put_line(v_str);
+execute immediate v_str bulk collect into v_tab;
+--dbms_output.put_line('no of columns'||v_cnt);
+for i in 1..v_tab.last loop
+dbms_output.put_line(v_tab(i));
+end loop;
+end;
+/
+exec sp_dyn_1('EMP');
+/
+
+--codes on functions
+-1.Write a function to print the factorial of a number.
+create or replace function fun_factorial(x in number) return number as
+ v_n number:=1;
+begin
+for i in 1..x loop
+v_n:=v_n*i;
+end loop;
+return v_n;
+end;
+/
+select fun_factorial(5) from dual;
+/
+set SERVEROUTPUT ON;
+/
+
+
+--3. Write a function that takes P,R,T as inputs and returns SI. SI=P*R*T/100
+/
+create or replace function fun_count(P number,R number, T number) return number as
+v_si number(20);
+begin
+v_si:=(P*R*T)/100;
+return v_si;
+end;
+
+/
+select fun_count(10,20,30) from dual;
+
+--4.Write a function which takes a date in string format and display whether it is a valid date or not. 
+/
+create or replace function fun_count(P_date varchar2) return varchar2 as
+v_date date;
+begin
+
+v_date:=to_date(p_date,'dd-mm-yyyy') ;
+if v_date=p_date then
+return 'it is valid date';
+else
+return 'it is not a valid date';
+
+end if;
+end;
+/
+
+select fun_count('14-05-2022') from dual;
