@@ -1,0 +1,99 @@
+--Write a plsql function by passing age and gender, if age IS LESS 18 then return 0 otherwise return
+--the no. of employees who are in that age and gender.
+/
+create or replace function fn_cnt_age(p_age in number, p_gender in varchar2) return number as
+v_cnt int;
+
+begin
+  if p_age<18 then
+     return 0;
+       else
+              select count(empno) into v_cnt
+              from emp
+              where trunc(months_between(sysdate, DOB)/12)=p_age and
+              GENDER =lower(p_gender);
+              
+      return v_cnt;
+   end if;
+ end;
+/
+
+select * from emp;
+/
+ select fn_cnt_age (30,'M')
+ from dual;
+/
+alter table emp
+add dob date;
+/
+update emp set dob='19-may-1998'
+where empno=7788;
+/
+alter table emp disable all triggers;
+/
+
+
+--2)4.Write a function which takes a date in string format and display whether it is a valid date or not.
+/
+create or replace function fn_valid_date(p_date varchar2) return varchar2 as
+v_date date;
+
+begin
+v_date:=to_date(p_date, 'dd-mon-yy');
+    if v_date=p_date then
+          return 'valid date';
+        else
+          return 'not valid date';
+   end if;
+ end;
+/
+
+
+select fn_valid_date('28-mar-2020')
+from dual;
+/
+
+--Write a function which takes a value from the user and check whether the given values is a number or
+--not. If it is a number, return ‘ valid Number’ otherwise ‘invalid number’.
+--Phone Number- should have 10 digits, all should be numbers and phno should start with 9 or 8 or 7.
+/
+ create or replace function fn_valid_phone(p_phone varchar2) return varchar2 as
+ 
+ begin
+   if length(p_phone)=10 and 
+      p_phone like '9%' or
+      p_phone like '8%' or
+      p_phone like '7%' then
+        return 'valid phone number';
+           else
+        return 'invalid phone number';
+    end if;  
+   end;
+/
+select fn_valid_phone(2310091445)
+from dual;
+/
+
+--DYNAMIC-SQL--
+--1. Write a procedure to add columns to the existing customer table by passing column name
+--and datatype.
+/
+create or replace procedure sp_dyn_add_columns(p_column_nm varchar2, p_datatype varchar2) as
+v_str varchar2(300);
+
+ begin 
+    v_str:='alter table customer add'||p_column_nm||' '||p_datatype;
+ execute immediate v_str;
+ end;
+ /
+ set serveroutput on;
+ /
+ exec sp_dyn_add_columns('country', 'varchar2(20)');
+ /
+ select *
+ from customer;
+ /
+ 
+
+
+   
